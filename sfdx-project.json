@@ -1,0 +1,11 @@
+{
+  "packageDirectories": [
+    {
+      "path": "src",
+      "default": true
+    }
+  ],
+  "name": "demo",
+  "namespace": "",
+  "sourceApiVersion": "63.0"
+}

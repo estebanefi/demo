@@ -1,0 +1,8 @@
+# .forceignore v2
+# List files or directories below to ignore when running force:source commands
+# For more information run sfdx force:help --json
+
+.forceignore
+**/jsconfig.json
+**/.eslintrc.json
+**/lwc/**/__tests__/**

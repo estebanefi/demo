@@ -59,8 +59,18 @@ Fields like `Origin`, `Priority`, `SuppliedEmail`, and `ContactId` are channel-s
 
 ---
 
+### 4. Routing fires on Case creation only, not updates
+
+The record-triggered Flow uses `recordTriggerType: Create`. Updates to existing Cases do not re-trigger routing.
+
+**Why:** Queue assignment is a one-time classification decision made at case intake. Re-routing on every save would override intentional agent re-assignments (e.g., an agent in Policy Services manually moving a case to Claims Intake). The initial routing is the automation's job; subsequent ownership changes are a human decision.
+
+**If re-routing on update is ever needed**, a separate "re-route" Flow scoped to a specific field change (e.g., a `Re_Route__c` checkbox) would be the correct approach — not broadening this Flow's trigger.
+
+---
+
 ## Consequences
 
-- Routing keywords are maintained in `CaseRoutingService` — a code change and deployment is required to add or remove keywords.
+- Routing keywords are maintained in `CaseRoutingService` — a code change and deployment is required to add or remove keywords. In a production implementation, keywords should be externalized to Custom Metadata records (e.g. `Queue_Routing_Keyword__mdt`) so admins can manage routing rules without a code deployment. For this demo, hardcoding is acceptable.
 - Cases with ambiguous or empty subjects/descriptions always land in Policy Services. Agents in that queue are expected to re-route edge cases manually.
 - The `CaseRoutingAction` invocable is a stable contract between the Flow and the service. Either side can evolve independently as long as the `subject`/`description` inputs and `queueDeveloperName` output remain in place.

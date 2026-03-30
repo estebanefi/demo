@@ -30,7 +30,7 @@
             <name>queueDeveloperName</name>
         </outputParameters>
     </actionCalls>
-    <apiVersion>63.0</apiVersion>
+    <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <description>Routes newly created Cases to the correct queue by calling CaseRoutingAction with the Case Subject and Description, then stamping OwnerId with the resolved queue.</description>
     <environments>Default</environments>

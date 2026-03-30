@@ -23,6 +23,9 @@ public with sharing class CaseRoutingService {
   public static String resolveQueue(String subject, String description) {
     String text = ((subject ?? '') + ' ' + (description ?? '')).toLowerCase();
 
+    // NOTE: Keywords are hardcoded here for demo simplicity.
+    // In production, these should be stored in Custom Metadata (e.g. Queue_Routing_Keyword__mdt)
+    // so routing rules can be managed by admins without a code deployment.
     Boolean matchesClaims = containsAny(text, new List<String>{ 'claim', 'loss', 'fnol', 'accident' });
     Boolean matchesBilling = containsAny(text, new List<String>{ 'billing', 'payment', 'invoice', 'premium' });
     Boolean matchesPolicy = containsAny(text, new List<String>{ 'policy', 'endorsement', 'cancellation', 'coverage' });

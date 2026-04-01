@@ -34,9 +34,13 @@ The keyword classification lives in `CaseRoutingService` (Apex), exposed to the 
 **Why not native Flow:**
 
 - Matching keywords across three queues in Flow would require dozens of Decision elements — one branch per keyword. Every new keyword means a Flow deployment.
-- Flow has no native `String.containsAny()` equivalent; replicating it requires nested formulas that are unreadable and untestable.
-- Apex is unit-testable with full assertion coverage. The 20+ unit tests in `CaseRoutingServiceTest` could not exist if the logic lived in Flow.
-- The service is deliberately decoupled from the invocation layer so the classification strategy can be replaced (e.g. an Einstein/AI call) without touching the Flow.
+- Flow's `CONTAINS()` formula function is case-sensitive. Reliable keyword matching requires case-normalization, which in Flow means wrapping every formula in `LOWER()` — producing nested expressions that are difficult to read and harder to maintain as the keyword list grows.
+- The service is deliberately decoupled from the invocation layer so the classification strategy can be replaced without touching the Flow. The planned migration to Einstein Prompt Templates is a direct example: swapping `CaseRoutingService`'s implementation will leave the Flow entirely unchanged.
+- That decoupling also protects testability long-term. Once the team moves to Einstein Prompt Templates, the Apex service can use dependency injection (an interface + mock strategy) to isolate the Prompt Template call in unit tests. If the classification logic lived in Flow instead, the Prompt Template call could not be mocked — the most critical routing logic would become an untested black box.
+
+**Trade-offs acknowledged:**
+
+- Flows do support automated testing: a Flow can be invoked from an Apex test class using `Test.startTest()`/`Test.stopTest()`, and its outcomes can be asserted end-to-end. However, Flow tests are not required for deployment — the platform enforces no coverage threshold for Flow. Apex enforces 75% coverage as a deployment gate, making tests a structural guarantee rather than a voluntary practice. Moving logic to Apex is not required to have test coverage — it is required to have coverage that is enforced and to have the kind of isolated, mockable unit tests that the upcoming Einstein integration demands.
 
 ---
 
